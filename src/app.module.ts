@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { BidModule } from './bid/api/bid.module';
-import { AuctionModule } from './auction/api/auction.module';
+import { BidModule } from './api/real-time/bid.module';
+import { AuctionModule } from './api/rest/auction.module';
 
 @Module({
   imports: [BidModule, AuctionModule],
