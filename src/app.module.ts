@@ -11,6 +11,7 @@ import { AuctionModule } from './api/rest/auction.module';
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         MONGO_CONNECTION_STRING: Joi.string().required(),
+        PORT: Joi.number(),
       }),
     }),
   ],
