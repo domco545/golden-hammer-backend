@@ -8,9 +8,18 @@ pipeline {
             steps {
                 parallel(
                     backend: {
-                        sh "npm install --only=prod"
+                        sh "npm install"
                         sh "npm run build"
                         sh "docker build . -t domco545/golden-hammer-backend"
+                    }
+                )
+            }
+        }
+        stage("Test") {
+            steps {
+                parallel(
+                    backend: {
+                        sh "npm test"
                     }
                 )
             }
