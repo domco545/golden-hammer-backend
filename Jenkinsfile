@@ -10,7 +10,7 @@ pipeline {
                     backend: {
                         sh "npm install --only=prod"
                         sh "npm run build"
-                        sh "docker build . -t domco545/golden-hammer-backend:${BUILD_NUMBER}"
+                        sh "docker build . -t domco545/golden-hammer-backend"
                     }
                 )
             }
@@ -21,7 +21,7 @@ pipeline {
                     api: {
                         withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                             sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
-                            sh "docker push domco545/golden-hammer-backend:${BUILD_NUMBER}"
+                            sh "docker push domco545/golden-hammer-backend"
                         }
                     }
                 )
@@ -35,7 +35,8 @@ pipeline {
                 message "Release to test enviroment?"
             }
             steps {
-                sh "docker-compose -p golden-hammer-backend -f docker-compose.test.yml up -d"
+                // sh "docker-compose -p golden-hammer-backend -f docker-compose.test.yml up -d"
+                echo "not implemented"
             }
         }
         stage("Release to production") {
