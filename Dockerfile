@@ -9,6 +9,8 @@ COPY package*.json ./
 
 RUN npm install --only=production
 
+RUN npm install glob @nestjs/cli
+
 COPY . .
 
 RUN npm run build
