@@ -1,8 +1,11 @@
 pipeline {
     agent any
+    options {
+      timeout(time: 1, unit: 'HOURS') 
+    }
     triggers {
 		pollSCM("*/10 * * * *")
-	}
+	  }
     stages {
         stage("Build") {
             steps {
@@ -37,9 +40,6 @@ pipeline {
             }
         }
         stage("Release to test") {
-            options {
-                timeout(time: 1, unit: 'HOURS') 
-            }
             input{
                 message "Release to test enviroment?"
             }
@@ -49,9 +49,6 @@ pipeline {
             }
         }
         stage("Release to production") {
-            options {
-                timeout(time: 1, unit: 'HOURS') 
-            }
             input { 
                 message "Release to production?"
             }
