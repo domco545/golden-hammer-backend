@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { AuctionEntity } from '../entity/auction.entity';
 import { Auction } from '../../../core/models/auction.model';
+import { Bid } from 'src/core/models/bid.model';
 
 @Injectable()
 export class AuctionRepository {
@@ -55,6 +56,14 @@ export class AuctionRepository {
       auction.id,
       update,
       { new: true },
+    );
+    return updatedAuction;
+  }
+
+  async addBid(auctionId:string, bid:Bid): Promise<Auction>{
+    const updatedAuction = await this.auctionDBModel.findByIdAndUpdate(
+      auctionId,
+      { $push: { bids: bid } },
     );
     return updatedAuction;
   }
