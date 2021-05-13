@@ -22,6 +22,11 @@ export class UserRepository {
     return user;
   }
 
+  async loginUser(email: string, hash: string): Promise<User>{
+    const user: User = await this.userDBModel.findOne({email: email, password: hash});
+    return user;
+  }
+
   async addAUser(user: User): Promise<User> {
     const createdUser = new this.userDBModel(user);
     const userEntitySaved = await createdUser.save();
