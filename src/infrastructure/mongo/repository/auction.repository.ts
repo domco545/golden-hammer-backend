@@ -67,4 +67,9 @@ export class AuctionRepository {
     );
     return updatedAuction;
   }
+
+  async getAllBidsForAuction(auctionId: string): Promise<Bid[]>{
+    const auction: Auction = await this.auctionDBModel.findById(auctionId);
+    return auction.bids;
+  }
 }
