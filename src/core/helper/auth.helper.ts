@@ -8,4 +8,8 @@ export class AuthHelper{
         const hash = await bcrypt.hash(password, saltOrRounds);
         return hash;
     }
+
+    async comparePassword(plainPass: string, hash: string): Promise<boolean>{
+        return await bcrypt.compare(plainPass, hash);
+    }
 }

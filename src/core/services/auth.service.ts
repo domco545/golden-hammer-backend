@@ -9,7 +9,11 @@ export class AuthService {
     constructor(private userRepository: UserRepository, private authHelper: AuthHelper) {}
 
     async login(loginDto: LoginDTO): Promise<User>{
-        const hash = await this.authHelper.hashPassword(loginDto.password);
-        return this.userRepository.loginUser(loginDto.email, hash);
+        const userData = await this.userRepository.loginUser(loginDto.email)
+        const passwordMatch = await this.authHelper.comparePassword(loginDto.password, userData.password)
+        if (passwordMatch) {
+            return await this.userRepository.getUser(userData.id);
+        }
+        return null;
     }
 }
