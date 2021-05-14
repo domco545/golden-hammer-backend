@@ -63,7 +63,9 @@ export class AuctionRepository {
   async addBid(auctionId:string, bid:Bid): Promise<Auction>{
     const updatedAuction = await this.auctionDBModel.findByIdAndUpdate(
       auctionId,
-      { $push: { bids: bid } },
+      { $push: { bids: bid },
+        $inc: {currentPrice: bid.value}
+      },
     );
     return updatedAuction;
   }
