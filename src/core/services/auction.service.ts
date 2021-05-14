@@ -4,8 +4,7 @@ import { Auction } from '../models/auction.model';
 
 @Injectable()
 export class AuctionService {
-  constructor(private auctionRepository: AuctionRepository) {
-  }
+  constructor(private auctionRepository: AuctionRepository) {}
 
   async createAuction(auction: Auction): Promise<Auction> {
     const auctionCreated = await this.auctionRepository.addAuction(auction);
