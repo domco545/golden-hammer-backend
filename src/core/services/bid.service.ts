@@ -11,7 +11,7 @@ export class BidService {
     return this.auctionRepository.getAllBidsForAuction(auctionId);
   }
 
-  async addBid(bid: AddBidDTO) {
-    throw new Error('Method not implemented.');
+  async addBid(bid: AddBidDTO): Promise<Bid[]>{
+    return this.auctionRepository.addBid(bid);
   }
 }

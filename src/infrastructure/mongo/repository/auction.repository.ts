@@ -3,34 +3,52 @@ import { Model } from 'mongoose';
 import { AuctionEntity } from '../entity/auction.entity';
 import { Auction } from '../../../core/models/auction.model';
 import { Bid } from 'src/core/models/bid.model';
+import { NewAuctionDTO } from 'src/api/rest/dtos/newAuction.dto';
+import { AddBidDTO } from 'src/api/real-time/dtos/add-bid.dto';
 
 @Injectable()
 export class AuctionRepository {
   constructor(
     @Inject('AUCTION_MODEL')
     private auctionDBModel: Model<AuctionEntity>,
-  ) {
-  }
+  ) {}
 
   async getAllAuctions(): Promise<Auction[]> {
-    const auctions: Auction[] = await this.auctionDBModel.find();
+    const auctions: Auction[] = await this.auctionDBModel
+      .find()
+      .populate('ownedBy')
+      .populate('bids.bidder', '-password');
     return auctions;
   }
 
   async getAuction(id: string): Promise<Auction> {
-    const auction: Auction = await this.auctionDBModel.findById(id);
+    const auction: Auction = await this.auctionDBModel
+      .findById(id)
+      .populate('ownedBy')
+      .populate('bids.bidder', '-password');
     return auction;
   }
 
-  async addAuction(auction: Auction): Promise<Auction> {
-    const createdAuction = new this.auctionDBModel(auction);
-    const auctionEntitySaved = await createdAuction.save();
+  async addAuction(auction: NewAuctionDTO): Promise<Auction> {
+    const createdAuction = new this.auctionDBModel({
+      name: auction.name,
+      description: auction.description,
+      startPrice: auction.startPrice,
+      currentPrice: auction.startPrice,
+      endDate: auction.endDate,
+      ownedBy: auction.ownedByID,
+    });
+    const auctionEntitySaved = await (await createdAuction.save()).populate(
+      'bids.bidder',
+      '-password',
+    );
     const actionToReturn: Auction = {
       id: auctionEntitySaved._id,
       name: auctionEntitySaved.name,
       description: auctionEntitySaved.description,
       startPrice: auctionEntitySaved.startPrice,
       currentPrice: auctionEntitySaved.currentPrice,
+      endDate: auctionEntitySaved.endDate,
       bids: auctionEntitySaved.bids,
       ownedBy: auctionEntitySaved.ownedBy,
     };
@@ -60,18 +78,20 @@ export class AuctionRepository {
     return updatedAuction;
   }
 
-  async addBid(auctionId:string, bid:Bid): Promise<Auction>{
-    const updatedAuction = await this.auctionDBModel.findByIdAndUpdate(
-      auctionId,
-      { $push: { bids: bid },
-        $inc: {currentPrice: bid.value}
-      },
-    );
-    return updatedAuction;
+  async addBid(bid: AddBidDTO): Promise<Bid[]> {
+    const updatedAuction = await this.auctionDBModel
+      .findByIdAndUpdate(bid.auctionId, {
+        $push: { bids: { value: bid.value, bidder: bid.bidderId } },
+        $inc: { currentPrice: bid.value },
+      })
+      .populate('bids.bidder', '-password');
+    return updatedAuction.bids;
   }
 
-  async getAllBidsForAuction(auctionId: string): Promise<Bid[]>{
-    const auction: Auction = await this.auctionDBModel.findById(auctionId);
+  async getAllBidsForAuction(auctionId: string): Promise<Bid[]> {
+    const auction: Auction = await this.auctionDBModel
+      .findById(auctionId)
+      .populate('bids.bidder', '-password');
     return auction.bids;
   }
 }

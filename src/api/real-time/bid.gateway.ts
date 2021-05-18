@@ -23,7 +23,7 @@ export class BidGateway {
     try {
       client.leaveAll();
       client.join(channelID);
-      const auctionBids = await this.bidService.getBidsForAuction(channelID);
+      const auctionBids: Bid[] = await this.bidService.getBidsForAuction(channelID);
       client.emit('listen-for-bids', auctionBids )
     } catch (e) {
       client.emit('error', e.message);
@@ -35,8 +35,8 @@ export class BidGateway {
     @ConnectedSocket() client: Socket,
   ) {
     try {
-      const bidFromDb = await this.bidService.addBid(bid);
-      this.server.to(bid.auctionId).emit('listen-for-bids', bidFromDb);
+      const bidsFromDb: Bid[] = await this.bidService.addBid(bid);
+      this.server.to(bid.auctionId).emit('listen-for-bids', bidsFromDb);
     } catch (e) {
       client.emit('error', e.message);
     }

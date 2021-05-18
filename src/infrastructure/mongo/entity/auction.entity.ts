@@ -9,6 +9,7 @@ export interface AuctionEntity extends Document {
     readonly description: string;
     readonly startPrice: number;
     readonly currentPrice: number;
+    readonly endDate: Date;
     readonly bids: Bid[];
     readonly ownedBy: User;
   }

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { NewAuctionDTO } from 'src/api/rest/dtos/newAuction.dto';
 import { AuctionRepository } from '../../infrastructure/mongo/repository/auction.repository';
 import { Auction } from '../models/auction.model';
 
@@ -6,8 +7,8 @@ import { Auction } from '../models/auction.model';
 export class AuctionService {
   constructor(private auctionRepository: AuctionRepository) {}
 
-  async createAuction(auction: Auction): Promise<Auction> {
-    const auctionCreated = await this.auctionRepository.addAuction(auction);
+  async createAuction(newAuction: NewAuctionDTO): Promise<Auction> {
+    const auctionCreated = await this.auctionRepository.addAuction(newAuction);
     return auctionCreated;
   }
 

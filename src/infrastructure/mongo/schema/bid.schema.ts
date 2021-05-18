@@ -1,10 +1,10 @@
 import * as mongoose from 'mongoose';
-import { UserSchema } from './user.schema';
+import { Schema } from 'mongoose';
 
 export const BidSchema = new mongoose.Schema({
-    value: Number,
-    date: String,
-    bidder: UserSchema,
+    value: {type: Number, required: true},
+    date: {type: Date, required: true, default: Date.now},
+    bidder: {type: Schema.Types.ObjectId, ref: 'User' },
 });
 BidSchema.set('toJSON', {
     virtuals: true
