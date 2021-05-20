@@ -9,7 +9,7 @@ export const AuctionSchema = new mongoose.Schema({
     currentPrice: {type: Number, required: true},
     endDate: {type: Date, required: true},
     bids: [BidSchema],
-    ownedBy: {type: Schema.Types.ObjectId, ref: 'User' },
+    ownedBy: {type: Schema.Types.ObjectId, ref: 'UserEntity' },
 });
 AuctionSchema.set('toJSON', {
     virtuals: true
