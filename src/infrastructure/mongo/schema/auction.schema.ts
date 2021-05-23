@@ -1,14 +1,15 @@
 import * as mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 import { BidSchema } from './bid.schema';
-import { UserSchema } from './user.schema';
 
 export const AuctionSchema = new mongoose.Schema({
-    name: String,
-    description: String,
-    startPrice: Number,
-    currentPrice: Number,
+    name: {type: String, required: true},
+    description: {type: String, required: true},
+    startPrice: {type: Number, required: true},
+    currentPrice: {type: Number, required: true},
+    endDate: {type: Date, required: true},
     bids: [BidSchema],
-    ownedBy: UserSchema,
+    ownedBy: {type: Schema.Types.ObjectId, ref: 'UserEntity' },
 });
 AuctionSchema.set('toJSON', {
     virtuals: true
