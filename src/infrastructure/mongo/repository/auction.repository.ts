@@ -16,7 +16,7 @@ export class AuctionRepository {
   async getAllAuctions(): Promise<Auction[]> {
     const auctions: Auction[] = await this.auctionDBModel
       .find()
-      .populate('ownedBy')
+      .populate('ownedBy', '-password')
       .populate('bids.bidder', '-password');
     return auctions;
   }
@@ -36,12 +36,11 @@ export class AuctionRepository {
       startPrice: auction.startPrice,
       currentPrice: auction.startPrice,
       endDate: auction.endDate,
-      ownedBy: auction.ownedByID,
+      ownedBy: auction.ownedByID
     });
-    const auctionEntitySaved = await (await createdAuction.save()).populate(
-      'bids.bidder',
-      '-password',
-    );
+    console.log(createdAuction);
+    const auctionEntitySaved = await createdAuction.save()
+    
     const actionToReturn: Auction = {
       id: auctionEntitySaved._id,
       name: auctionEntitySaved.name,
