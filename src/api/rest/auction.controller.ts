@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Body,
   Controller,
-  Delete,
   Get,
   Inject,
   InternalServerErrorException,
@@ -31,7 +30,7 @@ export class AuctionController {
     }
   }
 
-  @Get(':id')
+  @Get()
   async findAuction(@Param('id') id: string): Promise<Auction> {
     try {
       const auction: Auction = await this.auctionService.getAuction(id);
@@ -55,17 +54,5 @@ export class AuctionController {
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
-  }
-
-  @Delete(':id')
-  async deleteAuction(@Param('id') id: string): Promise<Auction>{
-      try {
-        const auction = await this.auctionService.deleteAuction(id);
-        if (auction) {
-          return auction;
-        }
-      } catch (error) {
-        throw new InternalServerErrorException(error);
-      }
   }
 }
