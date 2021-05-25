@@ -37,6 +37,7 @@ export class BidGateway {
   ) {
     try {
       const dto: ListenForBidsDto = await this.bidService.addBid(bid);
+      console.log('sending back dto', dto)
       this.server.to(bid.auctionId).emit('listen-for-bids', dto);
     } catch (e) {
       client.emit('error', e.message);

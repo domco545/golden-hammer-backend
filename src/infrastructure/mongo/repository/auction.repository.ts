@@ -37,11 +37,11 @@ export class AuctionRepository {
       startPrice: auction.startPrice,
       currentPrice: auction.startPrice,
       endDate: auction.endDate,
-      ownedBy: auction.ownedByID
+      ownedBy: auction.ownedByID,
     });
     console.log(createdAuction);
-    const auctionEntitySaved = await createdAuction.save()
-    
+    const auctionEntitySaved = await createdAuction.save();
+
     const actionToReturn: Auction = {
       id: auctionEntitySaved._id,
       name: auctionEntitySaved.name,
@@ -80,12 +80,19 @@ export class AuctionRepository {
 
   async addBid(bid: AddBidDTO): Promise<ListenForBidsDto> {
     const updatedAuction = await this.auctionDBModel
-      .findByIdAndUpdate(bid.auctionId, {
-        $push: { bids: { value: bid.value, bidder: bid.bidderId } },
-        $inc: { currentPrice: bid.value },
-      })
+      .findByIdAndUpdate(
+        bid.auctionId,
+        {
+          $push: { bids: { value: bid.value, bidder: bid.bidderId } },
+          $inc: { currentPrice: bid.value },
+        },
+        { new: true },
+      )
       .populate('bids.bidder', '-password');
-    const toReturn: ListenForBidsDto = {bids: updatedAuction.bids, currentItemPrice: updatedAuction.currentPrice}
+    const toReturn: ListenForBidsDto = {
+      bids: updatedAuction.bids,
+      currentItemPrice: updatedAuction.currentPrice,
+    };
     return toReturn;
   }
 
@@ -94,7 +101,10 @@ export class AuctionRepository {
       .findById(auctionId)
       .populate('bids.bidder', '-password');
 
-    const toReturn: ListenForBidsDto = {bids: auction.bids, currentItemPrice: auction.currentPrice}
+    const toReturn: ListenForBidsDto = {
+      bids: auction.bids,
+      currentItemPrice: auction.currentPrice,
+    };
     return toReturn;
   }
 }
