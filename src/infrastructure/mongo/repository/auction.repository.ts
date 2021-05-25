@@ -5,6 +5,7 @@ import { Auction } from '../../../core/models/auction.model';
 import { Bid } from 'src/core/models/bid.model';
 import { NewAuctionDTO } from 'src/api/rest/dtos/newAuction.dto';
 import { AddBidDTO } from 'src/api/real-time/dtos/add-bid.dto';
+import { ListenForBidsDto } from 'src/api/real-time/dtos/listenForBids.dto';
 
 @Injectable()
 export class AuctionRepository {
@@ -77,20 +78,23 @@ export class AuctionRepository {
     return updatedAuction;
   }
 
-  async addBid(bid: AddBidDTO): Promise<Bid[]> {
+  async addBid(bid: AddBidDTO): Promise<ListenForBidsDto> {
     const updatedAuction = await this.auctionDBModel
       .findByIdAndUpdate(bid.auctionId, {
         $push: { bids: { value: bid.value, bidder: bid.bidderId } },
         $inc: { currentPrice: bid.value },
       })
       .populate('bids.bidder', '-password');
-    return updatedAuction.bids;
+    const toReturn: ListenForBidsDto = {bids: updatedAuction.bids, currentItemPrice: updatedAuction.currentPrice}
+    return toReturn;
   }
 
-  async getAllBidsForAuction(auctionId: string): Promise<Bid[]> {
+  async getAllBidsForAuction(auctionId: string): Promise<ListenForBidsDto> {
     const auction: Auction = await this.auctionDBModel
       .findById(auctionId)
       .populate('bids.bidder', '-password');
-    return auction.bids;
+
+    const toReturn: ListenForBidsDto = {bids: auction.bids, currentItemPrice: auction.currentPrice}
+    return toReturn;
   }
 }

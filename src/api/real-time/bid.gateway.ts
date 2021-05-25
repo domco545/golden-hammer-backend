@@ -9,6 +9,7 @@ import { Socket } from 'socket.io';
 import { Bid } from 'src/core/models/bid.model';
 import { BidService } from 'src/core/services/bid.service';
 import { AddBidDTO } from './dtos/add-bid.dto';
+import { ListenForBidsDto } from './dtos/listenForBids.dto';
 
 @WebSocketGateway()
 export class BidGateway {
@@ -23,8 +24,8 @@ export class BidGateway {
     try {
       client.leaveAll();
       client.join(channelID);
-      const auctionBids: Bid[] = await this.bidService.getBidsForAuction(channelID);
-      client.emit('listen-for-bids', auctionBids )
+      const dto: ListenForBidsDto = await this.bidService.getBidsForAuction(channelID);
+      client.emit('listen-for-bids', dto )
     } catch (e) {
       client.emit('error', e.message);
     }
@@ -35,8 +36,8 @@ export class BidGateway {
     @ConnectedSocket() client: Socket,
   ) {
     try {
-      const bidsFromDb: Bid[] = await this.bidService.addBid(bid);
-      this.server.to(bid.auctionId).emit('listen-for-bids', bidsFromDb);
+      const dto: ListenForBidsDto = await this.bidService.addBid(bid);
+      this.server.to(bid.auctionId).emit('listen-for-bids', dto);
     } catch (e) {
       client.emit('error', e.message);
     }
