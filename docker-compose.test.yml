@@ -9,14 +9,18 @@ services:
         - 27017:27017
       volumes:
         - mongodb_data_container:/data/db
-    nestjs_api_test:
+    nestjs_api:
       image: domco545/golden-hammer-backend
       environment:
-        MONGO_CONNECTION_STRING: mongodb://root:admin@localhost/golden-hammer
+        MONGO_CONNECTION_STRING: mongodb://root:admin@mongodb_container:27017/golden-hammer
         PORT: 3000
       command: npm run start:prod
       ports:
         - 4003:3000
-        
+networks:
+  default:
+    external: true
+    name: golden
+
 volumes:
   mongodb_data_container:

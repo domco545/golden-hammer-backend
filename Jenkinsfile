@@ -45,8 +45,7 @@ pipeline {
                 message "Release to test enviroment?"
             }
             steps {
-                // sh "docker-compose -p golden-hammer-backend -f docker-compose.test.yml up -d"
-                echo "not implemented"
+                sh "docker-compose -p golden-hammer-backend -f docker-compose.test.yml up -d"
             }
         }
         stage("Release to production") {
