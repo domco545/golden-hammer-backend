@@ -57,9 +57,7 @@ pipeline {
                 message "Release to production?"
             }
             steps {
-                // echo "not implemented"
-                echo "testing git"
-                sh 'git status'
+                sh 'git push heroku HEAD:master'
             }
         }
     }
