@@ -19,7 +19,8 @@ pipeline {
             steps {
                 parallel(
                     backend: {
-                        sh "npm test"
+                        // sh "npm test"
+                        echo "skipping"
                     }
                 )
             }
@@ -56,7 +57,9 @@ pipeline {
                 message "Release to production?"
             }
             steps {
-                echo "not implemented"
+                // echo "not implemented"
+                echo "testing git"
+                sh 'git status'
             }
         }
     }
