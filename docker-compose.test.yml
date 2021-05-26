@@ -12,7 +12,7 @@ services:
     nestjs_api:
       image: domco545/golden-hammer-backend
       environment:
-        MONGO_CONNECTION_STRING: mongodb://root:admin@mongodb_container:27017/golden-hammer
+        MONGO_CONNECTION_STRING: mongodb://root:admin@mongodb_container:27017/golden-hammer?authSource=admin
         PORT: 3000
       command: npm run start:prod
       ports:
