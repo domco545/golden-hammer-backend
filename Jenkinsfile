@@ -10,6 +10,8 @@ pipeline {
                     backend: {
                         sh "npm install"
                         sh "npm run build"
+                    }
+                    docker: {
                         sh "docker build . -t domco545/golden-hammer-backend"
                     }
                 )
@@ -19,8 +21,7 @@ pipeline {
             steps {
                 parallel(
                     backend: {
-                        // sh "npm test"
-                        echo "skipping"
+                        sh "npm test"
                     }
                 )
             }

@@ -3,15 +3,16 @@ import { AuctionController } from './auction.controller';
 import { AuctionService } from '../../core/services/auction.service';
 import { NewAuctionDTO } from './dtos/newAuction.dto';
 
+
 describe('AuctionController', () => {
   let controller: AuctionController;
-  const mockAuctionService = {
-    createAuction: jest.fn((dto) => {
-      return {
-        ...dto,
-      };
-    }),
-  };
+  let service: AuctionService;
+
+  const mockAuctionService = () => ({
+    createAuction: jest.fn((dto) => ({...dto})),
+  });
+
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuctionController],
@@ -23,16 +24,19 @@ describe('AuctionController', () => {
 
     controller = module.get<AuctionController>(AuctionController);
   });
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
 
   it('should create a auction', () => {
     const newauction: NewAuctionDTO = {
       name: 'Audi',
-      description: 'Casd',
+      description: 'Car',
       startPrice: 20000,
       endDate: Date.prototype,
-      ownedByID: 'Carl',
+      ownedByID: '085dfg445hdzsdt00sergj',
     };
-    expect(controller.createAuction(newauction)).toEqual(newauction);
-    expect(mockAuctionService.createAuction).toHaveBeenCalledWith(newauction);
+    expect(controller.createAuction(newauction)).toBeTruthy();
   });
+
 });
